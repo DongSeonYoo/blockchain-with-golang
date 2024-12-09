@@ -10,16 +10,16 @@ import (
 The block has data, hash, prevHash
 */
 type block struct {
-	data     string
-	hash     string
-	prevHash string
+	Data     string
+	Hash     string
+	PrevHash string
 }
 
 /*
 The blockChain hash blocks (list of blocks)
 */
 type blockChain struct {
-	blocks []*block
+	Blocks []*block
 }
 
 var b *blockChain
@@ -34,7 +34,7 @@ func GetBlockChain() *blockChain {
 	if b == nil {
 		once.Do(func() {
 			b = &blockChain{}
-			b.blocks = append(b.blocks, CreateNewBlock("dongseonYoo"))
+			b.AddBlock("GenesisBlock")
 		})
 	}
 
@@ -57,13 +57,13 @@ Return the hash value of the last block in the blockchain
   - If Blockchain is empty, return empty string
 */
 func GetLastHash() string {
-	blockLength := len(GetBlockChain().blocks)
+	blockLength := len(GetBlockChain().Blocks)
 
 	if blockLength == 0 {
 		return ""
 	}
 
-	return GetBlockChain().blocks[blockLength-1].hash
+	return GetBlockChain().Blocks[blockLength-1].Hash
 }
 
 /*
@@ -72,7 +72,21 @@ Create a hash value using sha256
   - Calculate formular: block.hash + block.data
 */
 func (b *block) CreateHash() {
-	hash := sha256.Sum256([]byte(b.hash + b.data))
+	hash := sha256.Sum256([]byte(b.Hash + b.Data))
 
-	b.hash = fmt.Sprintf("%x", hash)
+	b.Hash = fmt.Sprintf("%x", hash)
+}
+
+/*
+Append a block to the block
+*/
+func (b *blockChain) AddBlock(data string) {
+	b.Blocks = append(b.Blocks, CreateNewBlock(data))
+}
+
+/*
+Return the all blocks in blockchain
+*/
+func (b *blockChain) AllBlocks() []*block {
+	return b.Blocks
 }
