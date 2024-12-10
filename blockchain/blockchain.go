@@ -7,9 +7,9 @@ import (
 )
 
 /*
-The block has data, hash, prevHash
+The Block has data, hash, prevHash
 */
-type block struct {
+type Block struct {
 	Data     string
 	Hash     string
 	PrevHash string
@@ -19,7 +19,7 @@ type block struct {
 The blockChain hash blocks (list of blocks)
 */
 type blockChain struct {
-	Blocks []*block
+	Blocks []*Block
 }
 
 var b *blockChain
@@ -44,8 +44,8 @@ func GetBlockChain() *blockChain {
 /*
 Return the new block
 */
-func CreateNewBlock(data string) *block {
-	newBlock := block{data, "", GetLastHash()}
+func CreateNewBlock(data string) *Block {
+	newBlock := Block{data, "", GetLastHash()}
 	newBlock.CreateHash()
 
 	return &newBlock
@@ -71,7 +71,7 @@ Create a hash value using sha256
 
   - Calculate formular: block.hash + block.data
 */
-func (b *block) CreateHash() {
+func (b *Block) CreateHash() {
 	hash := sha256.Sum256([]byte(b.Hash + b.Data))
 
 	b.Hash = fmt.Sprintf("%x", hash)
@@ -87,6 +87,6 @@ func (b *blockChain) AddBlock(data string) {
 /*
 Return the all blocks in blockchain
 */
-func (b *blockChain) AllBlocks() []*block {
+func (b *blockChain) AllBlocks() []*Block {
 	return b.Blocks
 }
