@@ -61,12 +61,12 @@ func (u url) MarshalText() (text []byte, err error) {
 func blocks(rw http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		utils.HandleErr(json.NewEncoder(rw).Encode(blockchain.GetBlockChain().AllBlocks()))
+		utils.HandleErr(json.NewEncoder(rw).Encode(blockchain.BlockChain().AllBlocks()))
 
 	case "POST":
 		var addBlockBody addBlockBody
 		utils.HandleErr(json.NewDecoder(r.Body).Decode(&addBlockBody))
-		blockchain.GetBlockChain().AddBlock(addBlockBody.Message)
+		blockchain.BlockChain().AddBlock(addBlockBody.Message)
 
 		rw.WriteHeader(http.StatusCreated)
 	}
@@ -78,7 +78,7 @@ func block(rw http.ResponseWriter, r *http.Request) {
 	utils.HandleErr(err)
 
 	encoder := json.NewEncoder(rw).Encode
-	block, err := blockchain.GetBlockChain().GetBlockById(height)
+	block, err := blockchain.BlockChain().GetBlockById(height)
 	if err == blockchain.ErrBlockNotFound {
 		rw.WriteHeader(http.StatusNotFound)
 		utils.HandleErr(encoder(errorResponse{fmt.Sprint(err)}))

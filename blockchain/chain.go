@@ -12,8 +12,12 @@ type blockchain struct {
 var b *blockchain
 var once sync.Once
 
+/*
+Add a new Block.
+save the block on the database (persist)
+*/
 func (b *blockchain) AddBlock(data string) {
-	block := createBlock(data, b.NewstHash, b.Height+1)
+	block := createBlock(data, b.NewstHash, b.Height)
 	b.NewstHash = block.Hash
 	b.Height = block.Height
 }
